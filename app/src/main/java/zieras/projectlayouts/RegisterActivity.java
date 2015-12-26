@@ -2,6 +2,7 @@ package zieras.projectlayouts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,12 +10,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
@@ -23,23 +25,37 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
-import zieras.projectlayouts.baseclass.Student;
-import zieras.projectlayouts.fragments.TakeAttendanceFragment;
+import zieras.projectlayouts.fragments.FindMacRegisterFragment;
+import zieras.projectlayouts.fragments.MainRegisterFragment;
 
-public class RegisterActivity extends AppCompatActivity {
-    private EditText nameview, matricview, macview;
+public class RegisterActivity extends AppCompatActivity implements MainRegisterFragment.OnButtonClickListener, FindMacRegisterFragment.OnButtonClickListener {
     private BluetoothAdapter bluetoothAdapter;
+    private String currentDeviceMac = null;
+    private FragmentManager fm = getFragmentManager();
+    public static ArrayList<BluetoothDevice> scannedDevices = new ArrayList<BluetoothDevice>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //instantiates the bluetooth adapter
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(bluetoothAdapter != null && currentDeviceMac == null) {
+            currentDeviceMac = bluetoothAdapter.getAddress();
+        }
+
+        //sets the main register layout
+        MainRegisterFragment mrf = new MainRegisterFragment();
+        mrf.currentDeviceMac = currentDeviceMac;
+        fm.beginTransaction().add(R.id.flr1, mrf).commit();
+
         //display alert dialog to inform user regarding the MAC Address displayed
         AlertDialog alertDialog = new AlertDialog.Builder(RegisterActivity.this).create();
         alertDialog.setTitle("PaperLess");
         alertDialog.setMessage("The Bluetooth MAC Address displayed is for this phone." +
-                "\nIf you would like to register a different Bluetooth MAC Address, kindly tap on the 'FIND MAC ADDRESS' button.");
+                "\n\nIf you would like to register a different Bluetooth MAC Address, kindly tap on the 'FIND MAC ADDRESS' button.");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Got It",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -47,71 +63,97 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
         alertDialog.show();
+    }
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        nameview = (EditText) findViewById(R.id.editName);
-        nameview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
-
-        matricview = (EditText) findViewById(R.id.editMatric);
-        matricview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
-
-        macview = (EditText) findViewById(R.id.confirmNewPass);
-        macview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
-
-        if(bluetoothAdapter != null) {
-            String currentDeviceMac = bluetoothAdapter.getAddress();
-            macview.setText(currentDeviceMac);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
-    //hides the keyboard of the device
-    public void hideKeyboard(View v) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
+    /*
+     * Bluetooth related methods
+     */
     final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                scannedDevices.add(device);
+                String result = "Device name:\n" + device.getName() +
+                        "\nMAC Address:\n" + device.getAddress();
+                FindMacRegisterFragment.listAdapter.add(result);
+                FindMacRegisterFragment.listAdapter.notifyDataSetChanged();
             }
 
             // When discovery finishes
             if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Toast.makeText(getApplicationContext(), "Device scanning completed.", Toast.LENGTH_SHORT).show();
             }
         }
     };
 
-    public void registerStudent(View v) {
-        String name = nameview.getText().toString();
-        String matric = matricview.getText().toString();
-        String mac = macview.getText().toString();
+    //hides the keyboard of the device
+    public void hideKeyboard(View v) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("RegisterActivity", "popping backstack");
+            fm.popBackStack();
+        } else {
+            Log.i("RegisterActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+    }
+
+    public void onDeviceSelected(int position) {
+        String newDeviceMac = scannedDevices.get(position).getAddress();
+        currentDeviceMac = newDeviceMac;
+        // when the button is pressed when it is still discovering, cancel the discovery
+        if (bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        onBackPressed();
+    }
+
+    public void onButtonClickFindMacRegister() {
+        if(bluetoothAdapter == null) {
+            Toast.makeText(this, "Your device does not support Bluetooth.", Toast.LENGTH_LONG).show();
+        } else if(!bluetoothAdapter.isEnabled()) {
+            Toast.makeText(this, "Please turn on your Bluetooth.", Toast.LENGTH_SHORT).show();
+        } else {
+            FindMacRegisterFragment fmrf = new FindMacRegisterFragment();
+            fm.beginTransaction().replace(R.id.flr1, fmrf).addToBackStack(null).commit();
+
+            if (bluetoothAdapter.isDiscovering()) {
+                // the button is pressed when it discovers, so cancel the discovery
+                bluetoothAdapter.cancelDiscovery();
+            } else {
+                //sets to false when the user starts the discovery
+                scannedDevices.clear();
+                bluetoothAdapter.startDiscovery();
+
+                IntentFilter intent = new IntentFilter();
+                intent.addAction(BluetoothDevice.ACTION_FOUND);
+                intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+                registerReceiver(broadcastReceiver, intent);
+                Toast.makeText(this, "Scanning for devices...", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void onButtonClickRegister(String name, String matric, String mac) {
         if(!name.equals("") && !matric.equals("") && !mac.equals("")) {
             RegisterTask task = new RegisterTask();
             task.execute(name.toLowerCase(), matric, mac.toLowerCase());

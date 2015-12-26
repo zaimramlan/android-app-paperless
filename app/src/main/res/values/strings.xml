@@ -41,6 +41,8 @@
     <string name="new_name">Name</string>
     <string name="new_matric">Matric No</string>
     <string name="new_mac">Bluetooth Mac Address</string>
+    <string name="findmacregister">Choose your device:</string>
+    <string name="findmacregister_desc">The Bluetooth MAC Address of the device chosen will be used for registration</string>
     <string name="register_url">http://zaimramlan.com/paperless/webservices/registerstudentwebservice.php</string>
     <string name="change_pass_url">http://zaimramlan.com/paperless/webservices/changepasswebservice.php</string>
 
