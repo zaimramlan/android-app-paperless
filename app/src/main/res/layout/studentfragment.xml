@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_gravity="center|top"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/off_logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Update MAC Bluetooth"
+        android:id="@+id/bUpdateMAC"
+        android:layout_marginTop="72dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#fff"
+        android:layout_below="@+id/welcomeMsg"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Password"
+        android:id="@+id/bPassChg"
+        android:backgroundTint="#fff"
+        android:layout_below="@+id/bUpdateMAC"
+        android:layout_alignStart="@+id/bUpdateMAC"
+        android:layout_alignEnd="@+id/bUpdateMAC" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        android:id="@+id/bLogout2"
+        android:backgroundTint="#fff"
+        android:layout_below="@+id/bPassChg"
+        android:layout_alignStart="@+id/bPassChg"
+        android:layout_alignEnd="@+id/bPassChg" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/welcome_message"
+        android:id="@+id/welcomeMsg"
+        android:layout_marginTop="29dp"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:gravity="center" />
+
+</RelativeLayout>

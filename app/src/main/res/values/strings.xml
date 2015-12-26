@@ -1,0 +1,51 @@
+<resources>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This username is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="title_activity_lecturer">LecturerActivity</string>
+    <string name="login_url">http://zaimramlan.com/paperless/webservices/loginwebservice.php</string>
+
+    <!-- String related to lecturer -->
+    <string name="app_name">PaperLess</string>
+    <string name="status">Status: -</string>
+    <string name="on">Turn On</string>
+    <string name="off">Turn Off</string>
+    <string name="update">Update Students</string>
+    <string name="display">Display Devices</string>
+    <string name="upload">Upload Attendance</string>
+    <string name="find">Take Attendance</string>
+    <string name="view">View Attendance</string>
+    <string name="fetch_url">http://zaimramlan.com/paperless/webservices/getdatawebservice.php</string>
+    <string name="attendance_update_url">http://zaimramlan.com/paperless/webservices/updateattendancewebservice.php</string>
+    <string name="local_storage_file">StudentsList</string>
+    <string name="title_activity_login">Bluetooth Attendance</string>
+
+    <!-- String related to student -->
+    <string name="welcome_message">Asslamualaikum, </string>
+    <string name="current_mac">Current Mac Address:</string>
+    <string name="current_mac_placeholder">Null</string>
+    <string name="change_mac">Change Mac Address:</string>
+    <string name="changeBtn">Change Mac Address</string>
+    <string name="logoutBtn">Logout</string>
+    <string name="change_mac_url">http://zaimramlan.com/paperless/webservices/changemacwebservice.php</string>
+
+    <!-- String related to new student registration -->
+    <string name="new_name">Name</string>
+    <string name="new_matric">Matric No</string>
+    <string name="new_mac">Bluetooth Mac Address</string>
+    <string name="register_url">http://zaimramlan.com/paperless/webservices/registerstudentwebservice.php</string>
+    <string name="change_pass_url">http://zaimramlan.com/paperless/webservices/changepasswebservice.php</string>
+
+    <!-- String related to change pass -->
+    <string name="new_pass">New Password</string>
+    <string name="confirm_new_pass">Confirm New Password</string>
+    <string name="changePassBtn">Change Password</string>
+</resources>

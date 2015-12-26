@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Students Present:"
+        android:id="@+id/attendance" />
+
+    <ListView android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.88"
+        android:layout_below="@+id/attendance"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/bUpload" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:weightSum="1">
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload List"
+        android:id="@+id/bUpload"
+        android:layout_gravity="center_horizontal"
+        android:onClick="uploadAttendance"
+        android:nestedScrollingEnabled="true"
+        android:backgroundTint="#fff"
+        android:layout_marginRight="5dp"
+        android:layout_weight="0.24"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="5dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retake Attendance"
+        android:id="@+id/bRetake"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onButtonClickRecord"
+        android:nestedScrollingEnabled="true"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#fff"
+        android:layout_marginRight="5dp"
+        android:layout_weight="0.14"
+        android:layout_alignTop="@+id/bUpload"
+        android:layout_toStartOf="@+id/bUpload"
+        android:layout_marginBottom="5dp" />
+
+
+</RelativeLayout>
