@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,13 +24,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import zieras.projectlayouts.baseclass.Student;
+import zieras.projectlayouts.fragments.TakeAttendanceFragment;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText nameview, matricview, macview;
+    private BluetoothAdapter bluetoothAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //display alert dialog to inform user regarding the MAC Address displayed
         AlertDialog alertDialog = new AlertDialog.Builder(RegisterActivity.this).create();
         alertDialog.setTitle("PaperLess");
         alertDialog.setMessage("The Bluetooth MAC Address displayed is for this phone." +
@@ -40,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
         alertDialog.show();
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         nameview = (EditText) findViewById(R.id.editName);
         nameview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -83,6 +91,21 @@ public class RegisterActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+
+    final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery finds a device
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Get the BluetoothDevice object from the Intent
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            }
+
+            // When discovery finishes
+            if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+            }
+        }
+    };
 
     public void registerStudent(View v) {
         String name = nameview.getText().toString();
