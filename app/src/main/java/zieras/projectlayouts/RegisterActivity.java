@@ -28,6 +28,17 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        AlertDialog alertDialog = new AlertDialog.Builder(RegisterActivity.this).create();
+        alertDialog.setTitle("PaperLess");
+        alertDialog.setMessage("The Bluetooth MAC Address displayed is for this phone." +
+                "\nIf you would like to register a different Bluetooth MAC Address, kindly tap on the 'FIND MAC ADDRESS' button.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Got It",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
