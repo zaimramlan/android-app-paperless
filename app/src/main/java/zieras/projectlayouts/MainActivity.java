@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements StudentFragment.O
 
             if (isLecturer) {
                 LecturerFragment lf = new LecturerFragment();
-                fm.beginTransaction().add(R.id.fl1, lf).commit();
+                fm.beginTransaction().replace(R.id.fl1, lf).commit();
                 updateDevices();
             } else {
                 if(currentStudent == null) {
@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements StudentFragment.O
     @Override
     public void onBackPressed(){
         if (fm.getBackStackEntryCount() > 0) {
-            Log.i("HomeActivity", "popping backstack");
+            Log.i("MainActivity", "popping backstack");
             fm.popBackStack();
         } else {
-            Log.i("HomeActivity", "nothing on backstack, calling super");
+            Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();
         }
     }
@@ -275,7 +275,8 @@ public class MainActivity extends AppCompatActivity implements StudentFragment.O
             e.printStackTrace();
         }
 
-        onBackPressed();
+        if(fm.getBackStackEntryCount() != 0)
+            onBackPressed();
     }
 
     //updates the data from the localstorage

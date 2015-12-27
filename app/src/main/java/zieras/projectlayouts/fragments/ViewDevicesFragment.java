@@ -40,7 +40,9 @@ public class ViewDevicesFragment extends Fragment{
         if(MainActivity.students.isEmpty())
             listAdapter.add("No devices yet.");
         else
-            for(Student student: MainActivity.students)
+            for(Student student: MainActivity.students) {
                 listAdapter.add("Name: \n" + student.getName() + "\nMatric Number: \n" + student.getMatricNo() + "\nMAC Address: \n" + student.getMacAddress());
+                listAdapter.notifyDataSetChanged();
+            }
     }
 }

@@ -111,7 +111,7 @@ public class GetStudentsTask extends AsyncTask<String, Void, String> {
         } else if(!isLecturerFragment) {
             StudentFragment sf = new StudentFragment();
             MainActivity.currentStudent = (Student) data.get(0);
-            ((MainActivity)context).getFragmentManager().beginTransaction().add(R.id.fl1, sf).commit();
+            ((MainActivity) context).getFragmentManager().beginTransaction().replace(R.id.fl1, sf).commit();
         }
 
         progressDialog.dismiss();
