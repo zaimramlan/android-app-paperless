@@ -57,7 +57,6 @@ public class MainRegisterFragment extends Fragment {
             }
         });
         macview.setText(currentDeviceMac);
-        Log.d("TESTST", "SEFSDFSDF");
 
         bFindMac = (Button) v.findViewById(R.id.bFindMac);
         bFindMac.setOnClickListener(new View.OnClickListener() {
