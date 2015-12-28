@@ -3,7 +3,6 @@ package zieras.projectlayouts.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,12 +74,17 @@ public class MainRegisterFragment extends Fragment {
                 String name = nameview.getText().toString();
                 String matric = matricview.getText().toString();
                 String mac = macview.getText().toString();
-
                 buttonClickCallback.onButtonClickRegister(name,matric,mac);
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        macview.setText(currentDeviceMac);
     }
 
     @Override

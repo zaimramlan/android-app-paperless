@@ -3,6 +3,7 @@ package zieras.projectlayouts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -32,7 +33,6 @@ import zieras.projectlayouts.fragments.MainRegisterFragment;
 
 public class RegisterActivity extends AppCompatActivity implements MainRegisterFragment.OnButtonClickListener, FindMacRegisterFragment.OnButtonClickListener {
     private BluetoothAdapter bluetoothAdapter;
-    private String currentDeviceMac = null;
     private FragmentManager fm = getFragmentManager();
     public static ArrayList<BluetoothDevice> scannedDevices = new ArrayList<BluetoothDevice>();
 
@@ -41,15 +41,16 @@ public class RegisterActivity extends AppCompatActivity implements MainRegisterF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //instantiates the bluetooth adapter
+        String currentDeviceMac = "";
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter != null && currentDeviceMac == null) {
+        if(bluetoothAdapter != null) {
             currentDeviceMac = bluetoothAdapter.getAddress();
         }
 
         //sets the main register layout
         MainRegisterFragment mrf = new MainRegisterFragment();
-        mrf.currentDeviceMac = currentDeviceMac;
-        fm.beginTransaction().add(R.id.flr1, mrf).commit();
+        MainRegisterFragment.currentDeviceMac = currentDeviceMac;
+        fm.beginTransaction().replace(R.id.flr1, mrf).setTransition(FragmentTransaction.TRANSIT_ENTER_MASK).commit();
 
         //display alert dialog to inform user regarding the MAC Address displayed
         AlertDialog alertDialog = new AlertDialog.Builder(RegisterActivity.this).create();
@@ -119,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity implements MainRegisterF
 
     public void onDeviceSelected(int position) {
         String newDeviceMac = scannedDevices.get(position).getAddress();
-        currentDeviceMac = newDeviceMac;
+        MainRegisterFragment.currentDeviceMac = newDeviceMac;
         // when the button is pressed when it is still discovering, cancel the discovery
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
@@ -134,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity implements MainRegisterF
             Toast.makeText(this, "Please turn on your Bluetooth.", Toast.LENGTH_SHORT).show();
         } else {
             FindMacRegisterFragment fmrf = new FindMacRegisterFragment();
-            fm.beginTransaction().replace(R.id.flr1, fmrf).addToBackStack(null).commit();
+            fm.beginTransaction().replace(R.id.flr1, fmrf).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
 
             if (bluetoothAdapter.isDiscovering()) {
                 // the button is pressed when it discovers, so cancel the discovery
